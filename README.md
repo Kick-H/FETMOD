@@ -23,6 +23,31 @@ semicon_workflow/
 
 ## Quick start
 
+### Installation
+
+Install the package directly from the repository root:
+
+```bash
+pip install .
+```
+
+To keep an editable checkout for development work, use:
+
+```bash
+pip install -e .[tests]
+```
+
+Heavy dependencies are grouped as extras so you can opt into the pieces you
+need:
+
+- `pip install .[calculators]` adds the Calorine NEP calculators required for
+  lattice, elastic, phonon, and thermal-conductivity workflows.
+- `pip install .[materials]` pulls in `pymatgen` for Materials Project
+  structure fetching and symmetry analysis.
+- `pip install .[phonons]` installs the phonopy/phono3py toolchain and HDF5
+  helpers needed for the phonon and thermal conductivity interfaces.
+- `pip install .[full]` installs all of the above extras.
+
 ```python
 from semicon_workflow.workflow import MaterialSpec, run_material_workflow
 
@@ -41,11 +66,15 @@ docstrings for details.
 
 ## Examples
 
-Two runnable examples live under `examples/`:
+Three runnable examples live under `examples/`:
 
 - `examples/quickstart.py` fetches silicon from the Materials Project and runs
   the lattice/elastic/phonon portions of the workflow, and also shows how to
   bypass MP fetching by supplying a local ASE structure.
+- `examples/phonon_potential_comparison.py` compares phonon band structures and
+  DOS curves for silicon generated with different potentials (DFT/NEP/SW/
+  Tersoff). Update the potential and pseudopotential paths before running to
+  reproduce the comparison.
 - `examples/gaa_structure_generator.py` now delegates to the packaged
   `semicon_workflow.gaa_structure` utilities so you can generate GAAFET/FinFET
   structures from the library or via the CLI.
