@@ -51,6 +51,12 @@ except Exception:
     compute_thermal_expansion_qha = None
 
 try:  # pragma: no cover - optional dependency guard
+    from .gaa_structure import cli_generate_gaafet, generate_gaafet_device
+except Exception:
+    cli_generate_gaafet = None
+    generate_gaafet_device = None
+
+try:  # pragma: no cover - optional dependency guard
     from .workflow import MaterialSpec, run_material_workflow
 except Exception:
     MaterialSpec = None
@@ -70,4 +76,6 @@ __all__ = [
     "compute_thermal_expansion_qha",
     "MaterialSpec",
     "run_material_workflow",
+    "cli_generate_gaafet",
+    "generate_gaafet_device",
 ]
