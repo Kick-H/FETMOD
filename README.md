@@ -96,4 +96,4 @@ pytest
 
 ## Cites
 
-Ke Xu, Gang Wang, Ting Liang, Yang Xiao, Dongliang Ding, Haichang Guo, Xiang Gao, Lei Tong, Xi Wan, Gang Zhang and Jianbin Xu， Device-Scale Atomistic Simulations of Heat Transport in Advanced Field-Effect Transistors, 2025, (https://arxiv.org/abs/2511.18915)[https://arxiv.org/abs/2511.18915]
+Ke Xu, Gang Wang, Ting Liang, Yang Xiao, Dongliang Ding, Haichang Guo, Xiang Gao, Lei Tong, Xi Wan, Gang Zhang and Jianbin Xu， Device-Scale Atomistic Simulations of Heat Transport in Advanced Field-Effect Transistors, 2025, https://arxiv.org/abs/2511.18915
