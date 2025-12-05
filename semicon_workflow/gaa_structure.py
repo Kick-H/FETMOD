@@ -524,12 +524,13 @@ def generate_gaafet_device(
     if fin_same_with_gaa and gaa_num == 1:
         H6 += (H6 + H7) * 2
 
+    H3 = (H6 + H7) * gaa_num + H8
     H5 = H2 + (H6 + H7) * gaa_num
 
     L, L1 = 348.0896, 140
     W, W1 = 212.1834, 80
 
-    print(f"H1:{H1}, H2:{H2}, H3:{(H6+H7)*gaa_num + H8}, H4:{H4}, H5:{H5}, H6:{H6}, H7:{H7}")
+    print(f"H1:{H1}, H2:{H2}, H3:{H3}, H4:{H4}, H5:{H5}, H6:{H6}, H7:{H7}")
     print(f"W:{W}, W1:{W1}, L:{L}, L1:{L1}")
 
     group_shift = 0
@@ -586,11 +587,11 @@ def generate_gaafet_device(
     group_shift += 1
 
     SiO_out_xyz = np.array([L, W, H5 + H8])
-    SiO_in_xyz: List[Sequence[float]] = [[L1, W, H2, H2 + (H6 + H7) * gaa_num + H8 - H2]]
+    SiO_in_xyz: List[Sequence[float]] = [[L1, W, H2, H2 + H3]]
     for i in range(gaa_num):
         SiO_in_xyz.append([L, W1, H2 + H6 * (i + 1) + H7 * i, H2 + (H6 + H7) * (i + 1)])
     if gaa_num == 1:
-        SiO_in_xyz = [[L1, W, H2, H2 + (H6 + H7) * gaa_num + H8 - H2], [L, W1, 0, H5]]
+        SiO_in_xyz = [[L1, W, H2, H2 + H3], [L, W1, 0, H5]]
     SiO_atoms = create_frame(oxide_path, SiO_out_xyz, SiO_in_xyz, ctype="SiO2", amorphous=True)
     if SiO_atoms is None:
         raise FileNotFoundError(f"Oxide file missing: {oxide_path}")
