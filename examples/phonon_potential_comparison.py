@@ -36,38 +36,40 @@ def build_nep() -> object:
     return build_nep_calculator(str(NEP_PATH))
 
 
-def build_sw() -> object:
-    """LAMMPS Stillinger–Weber potential for silicon."""
+def _build_lammps_calculator(pair_style: str, potential: Path) -> object:
+    """Create a LAMMPS calculator using a single silicon potential file.
+
+    This helper mirrors the manual setup you would do when running LAMMPS
+    directly: the potential file is passed to ``pair_coeff`` and also copied
+    into the working directory via the ``files`` argument. Returning a fully
+    constructed calculator (instead of a raw ``parameters`` dict) avoids the
+    ``expected str, bytes or os.PathLike object, not dict`` error that occurs
+    when :func:`compute_phonon_band_and_dos` tries to attach a calculator.
+    """
+
     if importlib.util.find_spec("ase.calculators.lammpsrun") is None:
-        raise RuntimeError("Install ASE's LAMMPS interface to run the SW example")
+        raise RuntimeError("Install ASE's LAMMPS interface to run the LAMMPS examples")
     from ase.calculators.lammpsrun import LAMMPS  # type: ignore
 
-    if not SW_POTENTIAL.is_file():
-        raise FileNotFoundError(f"SW potential not found: {SW_POTENTIAL}")
+    if not potential.is_file():
+        raise FileNotFoundError(f"Potential not found: {potential}")
 
     parameters = {
-        "pair_style": "sw",
-        "pair_coeff": [f"* * {SW_POTENTIAL} Si"],
+        "pair_style": pair_style,
+        "pair_coeff": [f"* * {potential} Si"],
         "mass": ["1 28.0855"],
     }
-    return LAMMPS(parameters=parameters, files=[str(SW_POTENTIAL)])
+    return LAMMPS(parameters=parameters, files=[str(potential)])
+
+
+def build_sw() -> object:
+    """LAMMPS Stillinger–Weber potential for silicon."""
+    return _build_lammps_calculator("sw", SW_POTENTIAL)
 
 
 def build_tersoff() -> object:
     """LAMMPS Tersoff potential for silicon."""
-    if importlib.util.find_spec("ase.calculators.lammpsrun") is None:
-        raise RuntimeError("Install ASE's LAMMPS interface to run the Tersoff example")
-    from ase.calculators.lammpsrun import LAMMPS  # type: ignore
-
-    if not TERSOFF_POTENTIAL.is_file():
-        raise FileNotFoundError(f"Tersoff potential not found: {TERSOFF_POTENTIAL}")
-
-    parameters = {
-        "pair_style": "tersoff",
-        "pair_coeff": [f"* * {TERSOFF_POTENTIAL} Si"],
-        "mass": ["1 28.0855"],
-    }
-    return LAMMPS(parameters=parameters, files=[str(TERSOFF_POTENTIAL)])
+    return _build_lammps_calculator("tersoff", TERSOFF_POTENTIAL)
 
 
 def build_qe_dft() -> object:
