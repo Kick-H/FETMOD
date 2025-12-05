@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Sequence, Tuple
+from typing import Callable, Sequence, Tuple
 
 import numpy as np
 from ase import Atoms
@@ -18,24 +18,48 @@ from .plotting import set_nature_style
 
 def compute_phonon_band_and_dos(
     atoms: Atoms,
-    nep_path: str,
+    nep_path: str | None = None,
     supercell: Sequence[int] = (2, 2, 2),
     mesh: int = 140,
     dos_range: Tuple[float, float] = (-0.1, 15.0),
     dos_pitch: float = 0.02,
     name: str = "material",
     outdir: str | Path = ".",
+    calc_builder: Callable[[], object] | None = None,
+    relax_fmax: float = 1.0e-4,
 ) -> Tuple[DataFrame, DataFrame]:
-    """Compute phonon dispersion and total density of states."""
+    """Compute phonon dispersion and total density of states.
+
+    Parameters
+    ----------
+    atoms
+        Structure to evaluate. A copy is made internally.
+    nep_path
+        Path to a NEP potential file. Required unless ``calc_builder`` is
+        provided. Retained for backward compatibility with existing workflow
+        calls.
+    supercell, mesh, dos_range, dos_pitch, name, outdir
+        Simulation parameters forwarded to ``calorine``/``phonopy``.
+    calc_builder
+        Optional factory returning an ASE-compatible calculator. Use this to
+        supply alternative potentials (DFT, SW, Tersoff, etc.).
+    relax_fmax
+        Maximum force threshold used during structure relaxation.
+    """
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     set_nature_style()
 
     atoms = atoms.copy()
-    atoms.calc = build_nep_calculator(nep_path)
+    if calc_builder is None:
+        if nep_path is None:
+            raise ValueError("Either calc_builder or nep_path must be provided")
+        calc_builder = lambda: build_nep_calculator(nep_path)
+
+    atoms.calc = calc_builder()
 
     print(f"[{name}] Relaxing structure for phonons ...")
-    relax_structure(atoms, fmax=1.0e-4)
+    relax_structure(atoms, fmax=relax_fmax)
     print(f"[{name}] Relaxation finished.")
 
     print(f"[{name}] Computing force constants ...")

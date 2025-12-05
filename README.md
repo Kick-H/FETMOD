@@ -66,11 +66,15 @@ docstrings for details.
 
 ## Examples
 
-Two runnable examples live under `examples/`:
+Three runnable examples live under `examples/`:
 
 - `examples/quickstart.py` fetches silicon from the Materials Project and runs
   the lattice/elastic/phonon portions of the workflow, and also shows how to
   bypass MP fetching by supplying a local ASE structure.
+- `examples/phonon_potential_comparison.py` compares phonon band structures and
+  DOS curves for silicon generated with different potentials (DFT/NEP/SW/
+  Tersoff). Update the potential and pseudopotential paths before running to
+  reproduce the comparison.
 - `examples/gaa_structure_generator.py` now delegates to the packaged
   `semicon_workflow.gaa_structure` utilities so you can generate GAAFET/FinFET
   structures from the library or via the CLI.
