@@ -23,6 +23,31 @@ semicon_workflow/
 
 ## Quick start
 
+### Installation
+
+Install the package directly from the repository root:
+
+```bash
+pip install .
+```
+
+To keep an editable checkout for development work, use:
+
+```bash
+pip install -e .[tests]
+```
+
+Heavy dependencies are grouped as extras so you can opt into the pieces you
+need:
+
+- `pip install .[calculators]` adds the Calorine NEP calculators required for
+  lattice, elastic, phonon, and thermal-conductivity workflows.
+- `pip install .[materials]` pulls in `pymatgen` for Materials Project
+  structure fetching and symmetry analysis.
+- `pip install .[phonons]` installs the phonopy/phono3py toolchain and HDF5
+  helpers needed for the phonon and thermal conductivity interfaces.
+- `pip install .[full]` installs all of the above extras.
+
 ```python
 from semicon_workflow.workflow import MaterialSpec, run_material_workflow
 
