@@ -541,8 +541,9 @@ def generate_gaafet_device(
         raise FileNotFoundError(f"Required substrate file missing: {substract_path}")
     substract_cell = substract_atoms.get_cell()[[0, 1, 2], [0, 1, 2]]
     L, W = substract_cell[0], substract_cell[1]
-
-    gaa_gata_list = [fix_high, fix_high + th_si, fix_high + th_si + H1, fix_high + th_si + H1 + H2]
+    delt_H = substract_cell[2] - (fix_high+th_si+H1+H5)
+    
+    gaa_gata_list = [fix_high, fix_high + th_si, fix_high + th_si + H1 + delt_H, fix_high + th_si + H1 + H2 + delt_H]
     del_group = [3]
     for _ in range(gaa_num):
         gaa_gata_list.append(gaa_gata_list[-1] + H6)
