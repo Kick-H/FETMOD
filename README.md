@@ -1,7 +1,7 @@
 # FETMOD
 
-A modular workflow package for NEP-based materials calculations. The
-`semicon_workflow` package groups together structure retrieval, relaxation,
+A modular workflow package for molecular dynamics (MD)-based materials calculations.
+The `semicon_workflow` package groups together structure retrieval, relaxation,
 elastic, phonon, thermal transport, and thermal expansion interfaces so the
 former standalone scripts can be orchestrated from a single entry point.
 
@@ -9,7 +9,7 @@ former standalone scripts can be orchestrated from a single entry point.
 
 ```
 semicon_workflow/
-├── calculators.py              # NEP calculator factory
+├── calculators.py              # ASE calculator factory
 ├── elastic_properties.py       # Elastic constants and pressure scan
 ├── mp_structures.py            # Materials Project fetch + ASE conversion
 ├── phonon_properties.py        # Phonon band structure and DOS
@@ -40,7 +40,7 @@ pip install -e .[tests]
 Heavy dependencies are grouped as extras so you can opt into the pieces you
 need:
 
-- `pip install .[calculators]` adds the Calorine NEP calculators required for
+- `pip install .[calculators]` adds the Calorine MD calculators required for
   lattice, elastic, phonon, and thermal-conductivity workflows.
 - `pip install .[materials]` pulls in `pymatgen` for Materials Project
   structure fetching and symmetry analysis.
@@ -79,7 +79,7 @@ Three runnable examples live under `examples/`:
   `semicon_workflow.gaa_structure` utilities so you can generate GAAFET/FinFET
   structures from the library or via the CLI.
 
-Run them with your NEP path and MP API key set in the environment:
+Run them with your potential file path and MP API key set in the environment:
 
 ```bash
 python examples/quickstart.py
