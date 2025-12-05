@@ -46,6 +46,9 @@ Two runnable examples live under `examples/`:
 - `examples/quickstart.py` fetches silicon from the Materials Project and runs
   the lattice/elastic/phonon portions of the workflow, and also shows how to
   bypass MP fetching by supplying a local ASE structure.
+- `examples/gaa_structure_generator.py` now delegates to the packaged
+  `semicon_workflow.gaa_structure` utilities so you can generate GAAFET/FinFET
+  structures from the library or via the CLI.
 
 Run them with your NEP path and MP API key set in the environment:
 
