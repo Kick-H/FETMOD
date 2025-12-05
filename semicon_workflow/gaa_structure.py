@@ -443,9 +443,11 @@ def separate_fin_sd(sd_atoms: Optional[Atoms], substract_cell: Sequence[float], 
     s_atoms = sd_atoms[s_mask]
     d_atoms = sd_atoms[d_mask]
 
-    print("成功分离SD区域:")
-    print(f"  鳍区域: x[{fin_start_x:.1f}-{fin_end_x:.1f}], y[{fin_start_y:.1f}-{fin_end_y:.1f}]")
-    print(f"  源极原子数: {len(s_atoms)}, 漏极原子数: {len(d_atoms)}, 鳍原子数: {len(fin_atoms)}")
+    print("Successfully separated SD regions:")
+    print(f"  Fin region: x[{fin_start_x:.1f}-{fin_end_x:.1f}], y[{fin_start_y:.1f}-{fin_end_y:.1f}]")
+    print(
+        f"  Source atoms: {len(s_atoms)}, Drain atoms: {len(d_atoms)}, Fin atoms: {len(fin_atoms)}"
+    )
 
     return s_atoms, d_atoms, fin_atoms
 
@@ -456,16 +458,16 @@ def separate_fin_sd(sd_atoms: Optional[Atoms], substract_cell: Sequence[float], 
 def analyze_xyz_file(filename: str) -> Tuple[Optional[Atoms], List[int]]:
     try:
         atoms = read(filename)
-        print(f"成功读取文件: {filename}")
-        print(f"总原子数: {len(atoms)}")
+        print(f"Successfully read file: {filename}")
+        print(f"Total atoms: {len(atoms)}")
 
         si_indices = [i for i, atom in enumerate(atoms) if atom.symbol == "Si"]
-        print(f"Si原子数量: {len(si_indices)}")
+        print(f"Number of Si atoms: {len(si_indices)}")
 
         return atoms, si_indices
 
     except Exception as e:
-        print(f"读取文件失败: {e}")
+        print(f"Failed to read file: {e}")
         return None, []
 
 
@@ -478,7 +480,7 @@ def dope_region(atoms: Atoms, si_indices: Sequence[int], region: Sequence[float]
         if x_min <= x <= x_max and y_min <= y <= y_max and z_min <= z <= z_max:
             region_si_indices.append(idx)
 
-    print(f"[区域分析] 目标区域内Si原子数: {len(region_si_indices)}")
+    print(f"[Region Analysis] Number of Si atoms in target region: {len(region_si_indices)}")
 
     num_to_dope = max(1, int(len(region_si_indices) * concentration)) if concentration > 0 else 0
     num_to_dope = min(num_to_dope, len(region_si_indices))
@@ -487,9 +489,11 @@ def dope_region(atoms: Atoms, si_indices: Sequence[int], region: Sequence[float]
         doped_indices = random.sample(region_si_indices, num_to_dope)
         for idx in doped_indices:
             atoms[idx].symbol = target_element
-        print(f"[掺杂完成] {target_element} 掺杂: {num_to_dope}个原子 (浓度: {concentration*100:.2f}%)")
+        print(
+            f"[Doping Completed] {target_element} doping: {num_to_dope} atoms (concentration: {concentration*100:.2f}%)"
+        )
     else:
-        print("[跳过掺杂] 浓度为0或区域无Si原子")
+        print("[Skipping Doping] Concentration is 0 or no Si atoms in region")
 
     return num_to_dope
 
@@ -623,7 +627,7 @@ def generate_gaafet_device(
     if output_path is None:
         output_path = Path(f"combined_GAAFET_{gaa_num}_{H6:.0f}_{H7:.0f}.xyz")
     write(output_path, combined, format="extxyz")
-    print(f"结构生成完成并保存为 {output_path}")
+    print(f"Structure generated and saved as {output_path}")
 
     return combined
 
