@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "semicon-workflow"
+version = "0.1.0"
+description = "Modular workflow package for NEP-based materials calculations"
+readme = "README.md"
+authors = [{name = "FETMOD contributors"}]
+license = {file = "LICENSE"}
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=1.5",
+    "matplotlib>=3.7",
+    "ase>=3.22",
+]
+
+[project.optional-dependencies]
+materials = [
+    "pymatgen>=2024.4",
+]
+phonons = [
+    "phonopy>=2.22",
+    "phono3py>=2.3",
+    "seekpath>=2.0",
+    "h5py>=3.8",
+]
+calculators = [
+    "calorine>=0.2",
+]
+full = [
+    "calorine>=0.2",
+    "pymatgen>=2024.4",
+    "phonopy>=2.22",
+    "phono3py>=2.3",
+    "seekpath>=2.0",
+    "h5py>=3.8",
+]
+
+tests = [
+    "pytest>=7.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["semicon_workflow*", "examples"]
