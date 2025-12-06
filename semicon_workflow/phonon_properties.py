@@ -110,6 +110,10 @@ def compute_phonon_band_and_dos(
     df_path = DataFrame(dict(labels=labels, positions=path["explicit_kpoints_linearcoord"]))
     df_path.drop(df_path.index[df_path.labels == ""], axis=0, inplace=True)
 
+    band_path_csv = outdir / f"{name}_phonon_band_path.csv"
+    df_path.to_csv(band_path_csv, index=False)
+    print(f"[{name}] band path labels saved to {band_path_csv}")
+
     ax.set_xticks(df_path.positions)
     ax.set_xticklabels(df_path.labels)
     for xp in df_path.positions:
