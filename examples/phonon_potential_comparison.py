@@ -56,7 +56,7 @@ def _build_lammps_calculator(pair_style: str, potential: Path) -> object:
 
     parameters = {
         "pair_style": pair_style,
-        "pair_coeff": [f"* * {potential} Si"],
+        "pair_coeff": [f"* * {str(potential)} Si"],
         "mass": ["1 28.0855"],
     }
     return LAMMPS(parameters=parameters, files=[str(potential)])
