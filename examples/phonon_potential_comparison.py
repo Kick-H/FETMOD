@@ -28,7 +28,9 @@ TERSOFF_POTENTIAL = Path("/path/to/Si.tersoff")
 QE_PSEUDO = Path("/path/to/Si.pbe-n-rrkjus_psl.1.0.0.UPF")
 
 
-# Calculator builders -------------------------------------------------------
+# ----------------------------------------------------------------------
+# Calculator builders
+# ----------------------------------------------------------------------
 def build_nep() -> object:
     """NEP calculator via calorine (requires NEP_PATH)."""
     if not NEP_PATH.is_file():
@@ -37,29 +39,24 @@ def build_nep() -> object:
 
 
 def _build_lammps_calculator(pair_style: str, potential: Path) -> object:
-    """Create a LAMMPS calculator using a single silicon potential file.
-
-    This helper mirrors the manual setup you would do when running LAMMPS
-    directly: the potential file is passed to ``pair_coeff`` and also copied
-    into the working directory via the ``files`` argument. Returning a fully
-    constructed calculator (instead of a raw ``parameters`` dict) avoids the
-    ``expected str, bytes or os.PathLike object, not dict`` error that occurs
-    when :func:`compute_phonon_band_and_dos` tries to attach a calculator.
-    """
-
     if importlib.util.find_spec("ase.calculators.lammpsrun") is None:
         raise RuntimeError("Install ASE's LAMMPS interface to run the LAMMPS examples")
+
     from ase.calculators.lammpsrun import LAMMPS  # type: ignore
 
     if not potential.is_file():
         raise FileNotFoundError(f"Potential not found: {potential}")
 
+    element = potential.stem.split(".")[0] or "Si"
+
+    files = [str(potential)]
     parameters = {
-        "pair_style": pair_style,
-        "pair_coeff": [f"* * {str(potential)} Si"],
-        "mass": ["1 28.0855"],
+        "pair_style": pair_style,                      # "sw" or "tersoff"
+        "pair_coeff": [f"* * {str(potential)} {element}"],
+        # Default：units="metal", atom_style="atomic"
     }
-    return LAMMPS(parameters=parameters, files=[str(potential)])
+
+    return LAMMPS(files=files, **parameters)
 
 
 def build_sw() -> object:
@@ -96,7 +93,9 @@ def build_qe_dft() -> object:
     )
 
 
-# Runner -------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# Runner
+# ----------------------------------------------------------------------
 def run_all(potential_builders: Dict[str, Callable[[], object]]) -> None:
     si = bulk("Si", "diamond", a=5.431, cubic=True)
     out_root = Path("results") / "phonon_comparison"
@@ -122,7 +121,7 @@ def run_all(potential_builders: Dict[str, Callable[[], object]]) -> None:
 
 if __name__ == "__main__":
     POTENTIALS: Dict[str, Callable[[], object]] = {
-        "DFT_QE": build_qe_dft,
+        #"DFT_QE": build_qe_dft,
         "NEP": build_nep,
         "SW": build_sw,
         "Tersoff": build_tersoff,
